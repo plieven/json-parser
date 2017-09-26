@@ -40,7 +40,6 @@ const struct _json_value json_value_none;
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include <math.h>
 
 typedef unsigned int json_uchar;
 
@@ -58,6 +57,14 @@ static unsigned char hex_value (json_char c)
       case 'f': case 'F': return 0x0F;
       default: return 0xFF;
    }
+}
+
+static double ipow10(int exp)
+{
+    int abs = exp < 0 ? -exp : exp;
+    double result = 1.0;
+    for (; abs > 0; --abs) result *= 10.0;
+    return exp < 0 ? 1.0 / result : result;
 }
 
 typedef struct
@@ -799,7 +806,7 @@ json_value * json_parse_ex (json_settings * settings,
                         goto e_failed;
                      }
 
-                     top->u.dbl += ((double) num_fraction) / (pow (10.0, (double) num_digits));
+                     top->u.dbl += ((double) num_fraction) / ipow10(num_digits);
                   }
 
                   if (b == 'e' || b == 'E')
@@ -825,8 +832,7 @@ json_value * json_parse_ex (json_settings * settings,
                      goto e_failed;
                   }
 
-                  top->u.dbl *= pow (10.0, (double)
-                      (flags & flag_num_e_negative ? - num_e : num_e));
+                  top->u.dbl *= ipow10(flags & flag_num_e_negative ? - num_e : num_e);
                }
 
                if (flags & flag_num_negative)
