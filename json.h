@@ -123,6 +123,13 @@ typedef struct _json_value
 
          json_object_entry * values;
 
+         #ifdef JSON_TRACK_SOURCE
+            /* Location of the object in the source buffer
+             */
+            json_char *ptr;
+            size_t sz;
+         #endif
+
          #if defined(__cplusplus) && __cplusplus >= 201103L
          decltype(values) begin () const
          {  return values;
@@ -164,7 +171,6 @@ typedef struct _json_value
       /* Location of the value in the source JSON
        */
       unsigned int line, col;
-
    #endif
 
 

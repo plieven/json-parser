@@ -139,6 +139,9 @@ static int new_value (json_state * state,
 
          case json_object:
 
+            #ifdef JSON_TRACK_SOURCE
+               value->u.object.ptr = (json_char *)state->ptr;
+            #endif
             if (value->u.object.length == 0)
                break;
 
@@ -735,6 +738,9 @@ json_value * json_parse_ex (json_settings * settings,
                      goto e_failed;
                };
 
+               #ifdef JSON_TRACK_SOURCE
+                  top->u.object.sz = (json_char *)state.ptr - top->u.object.ptr + 1;
+               #endif
                break;
 
             case json_integer:
