@@ -291,6 +291,18 @@ json_value * json_parse_ex (json_settings * settings,
                goto e_failed;
             }
 
+            if (state.settings.settings & json_fast_string_parse) {
+                json_char *p = strchr(state.ptr, '"');
+                if (!p) {
+                    sprintf (error, "Missing end of string (at %d:%d)", line_and_col);
+                    goto e_failed;
+                }
+                string_length = p - state.ptr;
+                if (!state.first_pass) memcpy(string, state.ptr, string_length);
+                state.ptr = p;
+                b = *p;
+            }
+
             if (string_length > state.uint_max)
                goto e_overflow;
 

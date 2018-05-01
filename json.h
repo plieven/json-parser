@@ -72,7 +72,8 @@ typedef struct
 
 } json_settings;
 
-#define json_enable_comments  0x01
+#define json_enable_comments   0x01
+#define json_fast_string_parse 0x02
 
 typedef enum
 {
